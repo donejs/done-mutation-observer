@@ -1,0 +1,39 @@
+{
+  "name": "done-mutation-observer",
+  "version": "0.0.1",
+	"main": "done-mutation-observer.js",
+  "description": "A quasi mutation observer polyfill (sort of)",
+  "homepage": "https://github.com/donejs/done-mutation-observer",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/donejs/done-mutation-observer.git"
+  },
+  "author": {
+    "name": "DoneJS Contributors",
+    "email": "contact@bitovi.com",
+    "url": "https://donejs.com/"
+  },
+	"license": "MIT",
+  "scripts": {
+    "preversion": "npm test",
+    "version": "git commit -am \"Update version number\"",
+    "postpublish": "git push --tags && git push",
+    "testee": "testee test.html --browsers firefox",
+    "test": "npm run jshint && npm run testee",
+    "jshint": "jshint ./*.js ./src/ --config",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish"
+  },
+  "keywords": [
+    "",
+    "donejs-plugin"
+  ],
+  "devDependencies": {
+    "jshint": "^2.9.1",
+    "steal": "^2.0.0",
+    "steal-qunit": "^1.0.1",
+    "steal-tools": "^2.0.0",
+    "testee": "^0.7.0"
+  }
+}
