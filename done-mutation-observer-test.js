@@ -1,9 +1,35 @@
-import QUnit from 'steal-qunit';
-import plugin from './done-mutation-observer';
+var QUnit = require("steal-qunit");
+var moUtils = require("./done-mutation-observer");
+var SimpleDOM = require("can-simple-dom");
 
-QUnit.module('done-mutation-observer');
+debugger;
 
-QUnit.test('Initialized the plugin', function(){
-  QUnit.equal(typeof plugin, 'function');
-  QUnit.equal(plugin(), 'This is the done-mutation-observer plugin');
-});
+tests("can-simple-dom", new SimpleDOM.Document());
+
+function tests(implName, document) {
+	var MutationObserver;
+
+	QUnit.module('done-mutation-observer ' + implName, {
+		beforeEach: function(){
+			MutationObserver = moUtils.addMutationObserver(document);
+		},
+		afterEach: function(){
+			moUtils.removeMutationObserver(document);
+		}
+	});
+
+	QUnit.test('Observes text mutations', function(assert){
+		var done = assert.async();
+
+		var div = document.createElement("div");
+		document.appendChild(div);
+
+		var mo = new moUtils.MutationObserver(function(mutations) {
+
+		});
+
+		mo.observe(div, { characterData: true });
+
+		div.appendChild(document.createTextNode("foo"));
+	});
+}

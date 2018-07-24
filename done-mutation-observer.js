@@ -1,3 +1,8 @@
-export default function() {
-  return `This is the done-mutation-observer plugin`;
-}
+
+exports.addMutationObserver = function(document) {
+	var docProto = Object.getPrototypeOf(document);
+};
+
+exports.removeMutationObserver = function(document){
+
+};
