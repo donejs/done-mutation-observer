@@ -93,4 +93,31 @@ function tests(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("Observes replaceChild", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				var article = doc.createElement("article");
+				div.appendChild(article);
+				return div;
+			},
+			mutate: function(root, doc){
+				root.replaceChild(doc.createElement("section"), root.firstChild);
+			},
+			options: function(){
+				return { subtree: true, childList: true };
+			},
+			test: function(records1, records2) {
+				assert.equal(records1.length, records2.length);
+				assert.equal(records1[0].type, records2[0].type);
+				assert.equal(records1[0].target.nodeName, records2[0].target.nodeName);
+				assert.equal(records1[0].addedNodes.length, records2[0].addedNodes.length);
+				assert.equal(records1[0].addedNodes[0].nodeName, records2[0].addedNodes[0].nodeName);
+				assert.equal(records1[0].removedNodes.length, records2[0].removedNodes.length);
+				assert.equal(records1[0].removedNodes[0].nodeName, records2[0].removedNodes[0].nodeName);
+			}
+		})
+		.run(assert);
+	});
 }
