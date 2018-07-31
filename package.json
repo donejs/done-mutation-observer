@@ -30,7 +30,7 @@
     "donejs-plugin"
   ],
   "devDependencies": {
-    "can-vdom": "^4.2.0",
+    "can-vdom": "^4.3.0",
     "jsdom": "^11.11.0",
     "jshint": "^2.9.1",
     "steal": "^2.0.0",

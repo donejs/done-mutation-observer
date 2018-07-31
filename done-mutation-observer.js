@@ -1,13 +1,19 @@
 var installCharacterData = require("./characterData");
+var installChildList = require("./childList");
 var MutationRecord = require("./mutation-record");
 
 var mutationObserverSymbol = Symbol.for("done.MutationObserver");
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
+var onChildAddedSymbol = Symbol.for("done.onChildAdded");
 
 var asap = Promise.resolve().then.bind(Promise.resolve());
 
 exports.addMutationObserver = function(window) {
 	var Node = window.Node;
+	var Element = window.Element;
+
+	console.assert(Node, "Cannot install MutationObserver on a window without [Node]");
+	console.assert(Element, "Cannot install MutationObserver on a window without [Element]");
 
 	function MutationObserver(callback) {
 		this.options = null;
@@ -58,7 +64,14 @@ exports.addMutationObserver = function(window) {
 		var record = new MutationRecord();
 		record.type = "characterData";
 		record.target = node;
+		enqueue(record);
+	};
 
+	window.document[onChildAddedSymbol] = function(node) {
+		var record = new MutationRecord();
+		record.type = "childList";
+		record.target = node.parentNode;
+		record.addedNodes.push(node);
 		enqueue(record);
 	};
 
@@ -66,6 +79,7 @@ exports.addMutationObserver = function(window) {
 	if(!Node[mutationObserverSymbol]) {
 		Node[mutationObserverSymbol] = true;
 		installCharacterData(Node);
+		installChildList(Element);
 	}
 
 	return MutationObserver;
