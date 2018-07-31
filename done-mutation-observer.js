@@ -4,7 +4,7 @@ var MutationRecord = require("./mutation-record");
 
 var mutationObserverSymbol = Symbol.for("done.MutationObserver");
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
-var onChildAddedSymbol = Symbol.for("done.onChildAdded");
+var onChildListSymbol = Symbol.for("done.onChildList");
 
 var asap = Promise.resolve().then.bind(Promise.resolve());
 
@@ -52,7 +52,7 @@ exports.addMutationObserver = function(window) {
 		while(!res.done) {
 			var mo = res.value;
 
-			if(mo.root.contains(record.target)) {
+			if(mo.root.contains(record.target) || mo.root === record.target) {
 				mo._enqueue(record);
 			}
 
@@ -67,11 +67,16 @@ exports.addMutationObserver = function(window) {
 		enqueue(record);
 	};
 
-	window.document[onChildAddedSymbol] = function(node) {
+	window.document[onChildListSymbol] = function(parentNode, addedNode, removedNode) {
 		var record = new MutationRecord();
 		record.type = "childList";
-		record.target = node.parentNode;
-		record.addedNodes.push(node);
+		record.target = parentNode;
+		if(addedNode) {
+			record.addedNodes.push(addedNode);
+		}
+		if(removedNode) {
+			record.removedNodes.push(removedNode);
+		}
 		enqueue(record);
 	};
 
