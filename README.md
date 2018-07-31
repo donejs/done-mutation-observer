@@ -1,8 +1,8 @@
 # done-mutation-observer
 
-[![Build Status](https://travis-ci.org//done-mutation-observer.svg?branch=master)](https://travis-ci.org//done-mutation-observer)
-
-
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/donejs/done-mutation-observer/blob/master/LICENSE)
+[![npm version](https://badge.fury.io/js/done-mutation-observer.svg)](https://www.npmjs.com/package/done-mutation-observer)
+[![Build Status](https://travis-ci.org/donejs/done-mutation-observer.svg?branch=master)](https://travis-ci.org/donejs/done-mutation-observer)
 
 ## Usage
 
