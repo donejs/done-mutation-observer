@@ -26,6 +26,7 @@ class TestContext {
 	}
 
 	run(assert) {
+		let context = this;
 		let done = assert.async();
 
 		this._ensureFixtureArea(this.document);
@@ -51,8 +52,9 @@ class TestContext {
 			calledBack++;
 
 			if(calledBack === 2) {
-				let results = this.options.compare(roots[0], roots[1]);
+				let results = context.options.compare(roots[0], roots[1]);
 				assertComparisions(results);
+				done();
 			}
 		}
 
@@ -73,4 +75,9 @@ exports.createContext = function(document, MutationObserver) {
 	return function(options){
 		return new TestContext(document, MutationObserver, options);
 	};
+};
+
+exports.setupCanVdom = function() {
+	var makeWindow = require("can-vdom/make-window/make-window");
+	return makeWindow({});
 };
