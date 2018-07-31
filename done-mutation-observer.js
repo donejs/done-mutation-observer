@@ -19,7 +19,6 @@ exports.addMutationObserver = function(window) {
 		this.options = null;
 		this.root = null;
 		this.callback = callback;
-		window[mutationObserverSymbol].add(this);
 		this.records = [];
 		this._enqueued = false;
 	}
@@ -27,6 +26,11 @@ exports.addMutationObserver = function(window) {
 	MutationObserver.prototype.observe = function(root, options) {
 		this.root = root;
 		this.options = options;
+		window[mutationObserverSymbol].add(this);
+	};
+
+	MutationObserver.prototype.disconnect = function(){
+		window[mutationObserverSymbol].delete(this);
 	};
 
 	MutationObserver.prototype._enqueue = function(record) {
