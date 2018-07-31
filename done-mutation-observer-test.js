@@ -1,17 +1,18 @@
 var QUnit = require("steal-qunit");
 var moUtils = require("./done-mutation-observer");
-var SimpleDOM = require("can-simple-dom");
+var helpers = require("./test/helpers");
 
-debugger;
+tests("can-simple-dom", helpers.setupCanVdom());
 
-tests("can-simple-dom", new SimpleDOM.Document());
+function tests(implName, window) {
+	var document = window.document;
 
-function tests(implName, document) {
-	var MutationObserver;
+	var MutationObserver, testMutations;
 
 	QUnit.module('done-mutation-observer ' + implName, {
 		beforeEach: function(){
-			MutationObserver = moUtils.addMutationObserver(document);
+			MutationObserver = moUtils.addMutationObserver(window);
+			testMutations = helpers.createContext(document, MutationObserver);
 		},
 		afterEach: function(){
 			moUtils.removeMutationObserver(document);
@@ -19,17 +20,28 @@ function tests(implName, document) {
 	});
 
 	QUnit.test('Observes text mutations', function(assert){
-		var done = assert.async();
-
-		var div = document.createElement("div");
-		document.appendChild(div);
-
-		var mo = new moUtils.MutationObserver(function(mutations) {
-
-		});
-
-		mo.observe(div, { characterData: true });
-
-		div.appendChild(document.createTextNode("foo"));
+		testMutations({
+			build: function(doc){
+				var div = doc.createElement("div");
+				div.appendChild(doc.createTextNode("foo"));
+				return div;
+			},
+			mutate: function(root) {
+				root.firstChild.nodeValue = "bar";
+			},
+			options: function() {
+				return { subtree: true, characterData: true };
+			},
+			compare: function(root1, root2){
+				return [
+					[
+						root1.firstChild.nodeValue,
+						root2.firstChild.nodeValue,
+						"Same nodeValue"
+					]
+				];
+			}
+		})
+		.run(assert);
 	});
 }
