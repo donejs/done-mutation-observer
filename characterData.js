@@ -21,5 +21,5 @@ module.exports = function(Node) {
 		get: function(){
 			return this[_priv];
 		}
-	})
-}
+	});
+};

@@ -26,7 +26,7 @@ function tests(implName, window) {
 				div.appendChild(doc.createTextNode("foo"));
 				return div;
 			},
-			mutate: function(root, doc) {
+			mutate: function(root) {
 				root.firstChild.nodeValue = "bar";
 			},
 			options: function() {

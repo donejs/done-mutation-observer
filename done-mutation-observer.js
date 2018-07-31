@@ -3,7 +3,6 @@ var MutationRecord = require("./mutation-record");
 
 var mutationObserverSymbol = Symbol.for("done.MutationObserver");
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
-var enqueuedMutationsSymbol = Symbol.for("done.enqueuedMutations");
 
 var asap = Promise.resolve().then.bind(Promise.resolve());
 
@@ -29,6 +28,7 @@ exports.addMutationObserver = function(window) {
 		if(!this._enqueued) {
 			this._enqueued = true;
 			asap(function(){
+				this._enqueued = false;
 				var records = this.records;
 				this.records = [];
 				this.callback.call(this, records);
@@ -54,7 +54,7 @@ exports.addMutationObserver = function(window) {
 		}
 	}
 
-	window.document[onCharacterDataSymbol] = function(node, oldValue) {
+	window.document[onCharacterDataSymbol] = function(node) {
 		var record = new MutationRecord();
 		record.type = "characterData";
 		record.target = node;
@@ -71,6 +71,6 @@ exports.addMutationObserver = function(window) {
 	return MutationObserver;
 };
 
-exports.removeMutationObserver = function(document){
-
+exports.removeMutationObserver = function(){
+	// TODO Undo everything
 };
