@@ -46,14 +46,12 @@ class TestContext {
 			}
 		}
 
-		let calledBack = 0;
+		let mutationRecords = [];
 		function onMutations(records) {
-			let MutationObserver = this;
-			calledBack++;
+			mutationRecords.push(records);
 
-			if(calledBack === 2) {
-				let results = context.options.compare(roots[0], roots[1]);
-				assertComparisions(results);
+			if(mutationRecords.length === 2) {
+				context.options.test(...mutationRecords)
 				done();
 			}
 		}
