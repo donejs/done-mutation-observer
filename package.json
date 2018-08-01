@@ -1,6 +1,6 @@
 {
   "name": "done-mutation-observer",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "done-mutation-observer.js",
   "description": "A quasi mutation observer polyfill (sort of)",
   "homepage": "https://github.com/donejs/done-mutation-observer",
