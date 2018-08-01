@@ -120,4 +120,51 @@ function tests(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("Observes insertBefore", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				div.appendChild(doc.createElement("span"));
+				div.appendChild(doc.createElement("ul"));
+				return div;
+			},
+			mutate: function(root, doc) {
+				root.insertBefore(doc.createElement("label"), root.firstChild.nextSibling);
+			},
+			options: function() {
+				return { subtree: true, childList: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length, "Correct number of records");
+				equal(records => records[0].addedNodes.length);
+				equal(records => records[0].removedNodes.length);
+			}
+		})
+		.run(assert);
+	});
+
+	QUnit.test("Observes removeChild", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				var child = doc.createElement("span");
+				div.appendChild(child);
+				return div;
+			},
+			mutate: function(root) {
+				root.removeChild(root.firstChild);
+			},
+			options: function(){
+				return { subtree: true, childList: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].addedNodes.length);
+				equal(records => records[0].removedNodes.length);
+				equal(records => records[0].removedNodes[0].nodeName);
+			}
+		})
+		.run(assert);
+	});
 }

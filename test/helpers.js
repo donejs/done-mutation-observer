@@ -40,18 +40,16 @@ class TestContext {
 			return root;
 		});
 
-		function assertComparisions(results) {
-			for(let [a, b, msg] of results) {
-				assert.equal(a, b, msg);
-			}
+		let mutationRecords = [];
+		function equal(fn, msg) {
+			assert.equal(fn(mutationRecords[0]), fn(mutationRecords[1]), msg);
 		}
 
-		let mutationRecords = [];
 		function onMutations(records) {
 			mutationRecords.push(records);
 
 			if(mutationRecords.length === 2) {
-				context.options.test(...mutationRecords)
+				context.options.test(...mutationRecords, equal);
 				done();
 			}
 		}
