@@ -1,3 +1,5 @@
+var moUtils = require("../done-mutation-observer");
+
 class TestContext {
 	constructor(document, MutationObserver, options) {
 		this.document = document;
@@ -67,13 +69,22 @@ class TestContext {
 	}
 }
 
+exports.addHooks = function(window){
+	var document = window.document;
+
+	return {
+		beforeEach: function(){
+			var MutationObserver = moUtils.addMutationObserver(window);
+			this.testMutations = exports.createContext(document, MutationObserver);
+		},
+		afterEach: function(){
+			moUtils.removeMutationObserver(document);
+		}
+	};
+};
+
 exports.createContext = function(document, MutationObserver) {
 	return function(options){
 		return new TestContext(document, MutationObserver, options);
 	};
-};
-
-exports.setupCanVdom = function() {
-	var makeWindow = require("can-vdom/make-window/make-window");
-	return makeWindow({});
 };

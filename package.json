@@ -33,9 +33,21 @@
     "can-vdom": "^4.3.0",
     "jsdom": "^11.11.0",
     "jshint": "^2.9.1",
-    "steal": "^2.0.0",
+    "steal": "^2.1.1",
     "steal-qunit": "^1.0.1",
     "steal-tools": "^2.0.0",
-    "testee": "^0.7.0"
+    "testee": "^0.7.0",
+    "minimalistic-crypto-utils": "1.0.1",
+    "nwsapi": "2.0.7"
+  },
+  "steal": {
+    "meta": {
+      "minimalistic-crypto-utils": {
+        "format": "cjs"
+      },
+      "nwsapi": {
+        "format": "cjs"
+      }
+    }
   }
 }
