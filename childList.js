@@ -39,8 +39,8 @@ module.exports = function(Element) {
 
 	return function() {
 		Element.prototype.appendChild = appendChild;
-		//Element.prototype.insertBefore = insertBefore;
-		//Element.prototype.removeChild = removeChild;
+		Element.prototype.insertBefore = insertBefore;
+		Element.prototype.removeChild = removeChild;
 		Element.prototype.replaceChild = replaceChild;
 	};
 };
