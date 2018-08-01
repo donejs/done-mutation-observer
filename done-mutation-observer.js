@@ -1,10 +1,12 @@
 var installCharacterData = require("./characterData");
 var installChildList = require("./childList");
+var installAttributes = require("./attributes");
 var MutationRecord = require("./mutation-record");
 
 var mutationObserverSymbol = Symbol.for("done.MutationObserver");
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
 var onChildListSymbol = Symbol.for("done.onChildList");
+var onAttributeSymbol = Symbol.for("done.onAttribute");
 
 var asap = Promise.resolve().then.bind(Promise.resolve());
 
@@ -84,11 +86,20 @@ exports.addMutationObserver = function(window) {
 		enqueue(record);
 	};
 
+	window.document[onAttributeSymbol] = function(node, attrName) {
+		var record = new MutationRecord();
+		record.type = "attributes";
+		record.target = node;
+		record.attributeName = attrName;
+		enqueue(record);
+	};
+
 	// Do not add MutationObserver if already added.
 	if(!Node[mutationObserverSymbol]) {
 		Node[mutationObserverSymbol] = true;
 		installCharacterData(Node);
 		installChildList(Element);
+		installAttributes(Element);
 	}
 
 	return MutationObserver;

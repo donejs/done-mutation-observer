@@ -51,6 +51,7 @@ function tests(implName, window) {
 			build: function(doc) {
 				var div = doc.createElement("div");
 				var article = doc.createElement("article");
+				article.textContent = "original text";
 				div.appendChild(article);
 				return div;
 			},
@@ -60,8 +61,12 @@ function tests(implName, window) {
 			options: function(){
 				return { subtree: true, childList: true };
 			},
-			test: function(records1, records2) {
-				assert.equal(records1.length, records2.length);
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].addedNodes.length);
+				equal(records => records[0].addedNodes[0].nodeType);
+				equal(records => records[0].removedNodes.length, "Same number of removed nodes");
+				equal(records => records[0].removedNodes[0].nodeType, "Removed node correct node type");
 			}
 		})
 		.run(assert);
@@ -163,6 +168,74 @@ function tests(implName, window) {
 				equal(records => records[0].addedNodes.length);
 				equal(records => records[0].removedNodes.length);
 				equal(records => records[0].removedNodes[0].nodeName);
+			}
+		})
+		.run(assert);
+	});
+
+	QUnit.module(implName + ' Attributes', addHooks());
+
+	QUnit.test("Observes setAttribute when there is no existing attribute", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				return div;
+			},
+			mutate: function(root) {
+				root.setAttribute("id", "this-element");
+			},
+			options: function() {
+				return { subtree: true, attributes: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length, "Same number of records");
+				equal(records => records[0].type);
+				equal(records => records[0].attributeName);
+			}
+		})
+		.run(assert);
+	});
+
+	QUnit.test("Observes setAttribute when there is an existing attribute", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				div.setAttribute("id", "one");
+				return div;
+			},
+			mutate: function(root) {
+				root.setAttribute("id", "two");
+			},
+			options: function() {
+				return { subtree: true, attributes: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length, "Same number of records");
+				equal(records => records[0].type);
+				equal(records => records[0].attributeName);
+			}
+		})
+		.run(assert);
+	});
+
+	QUnit.test("Observes removeAttribute", function(assert) {
+		testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				div.setAttribute("id", "one");
+				return div;
+			},
+			mutate: function(root) {
+				root.removeAttribute("id");
+			},
+			options: function() {
+				return { subtree: true, attributes: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].type);
+				equal(records => records[0].attributeName);
+				equal(records => records[0].target.nodeName);
 			}
 		})
 		.run(assert);
