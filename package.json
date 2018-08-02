@@ -15,10 +15,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "preversion": "npm test",
+    "preversion": "npm run testee-chrome",
     "version": "git commit -am \"Update version number\"",
     "postpublish": "git push --tags && git push",
     "testee": "testee test.html --browsers firefox",
+    "testee-chrome": "testee test.html --browsers chrome",
     "test": "npm run jshint && npm run testee",
     "jshint": "jshint ./*.js --config",
     "release:patch": "npm version patch && npm publish",
