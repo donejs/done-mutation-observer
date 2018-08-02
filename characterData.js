@@ -3,13 +3,15 @@ var noop = Function.prototype;
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
 
 module.exports = function(Node) {
-	var desc = Object.getOwnPropertyDescriptor(Node.prototype, "nodeValue");
+	var origDesc = Object.getOwnPropertyDescriptor(Node.prototype, "nodeValue");
+	var desc = origDesc;
 	if(desc == null) {
 		desc = { get: noop, set: noop };
 	}
 
 	var _priv = Symbol("nodeValue");
 	Object.defineProperty(Node.prototype, "nodeValue", {
+		configurable: true,
 		set: function(val){
 			var oldValue = this[_priv];
 			this[_priv] = val;
@@ -22,4 +24,10 @@ module.exports = function(Node) {
 			return this[_priv];
 		}
 	});
+
+	return function(){
+		if(origDesc) {
+			Object.defineProperty(Node.prototype, "nodeValue", origDesc);
+		}
+	};
 };

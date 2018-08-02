@@ -96,15 +96,21 @@ exports.addMutationObserver = function(window) {
 
 	// Do not add MutationObserver if already added.
 	if(!Node[mutationObserverSymbol]) {
-		Node[mutationObserverSymbol] = true;
-		installCharacterData(Node);
-		installChildList(Element);
-		installAttributes(Element);
+		Node[mutationObserverSymbol] = [
+			installCharacterData(Node),
+			installChildList(Element),
+			installAttributes(Element)
+		];
 	}
 
 	return MutationObserver;
 };
 
-exports.removeMutationObserver = function(){
-	// TODO Undo everything
+exports.removeMutationObserver = function(window){
+	var deregisterFunctions = window.Node[mutationObserverSymbol] || [];
+	deregisterFunctions.forEach(function(deregister) {
+		deregister();
+	});
+	delete window.Node[mutationObserverSymbol];
+	delete window.MutationObserver;
 };
