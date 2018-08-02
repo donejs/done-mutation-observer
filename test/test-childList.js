@@ -127,4 +127,27 @@ module.exports = function(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("replaceChild on the document", function(assert){
+		this.testMutations({
+			build: function(doc) {
+				return doc;
+			},
+			mutate: function(root, doc) {
+				var html = doc.createElement("html");
+				var old = doc.documentElement;
+				root.replaceChild(html, old);
+				root.replaceChild(old, html);
+			},
+			options: function(){
+				return { subtree: true, childList: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].addedNodes.length);
+				equal(records => records[0].addedNodes[0].nodeName);
+			}
+		})
+		.run(assert);
+	});
 };
