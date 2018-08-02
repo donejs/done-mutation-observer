@@ -102,4 +102,29 @@ module.exports = function(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("DocumentFragment insertions", function(assert) {
+		this.testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				return div;
+			},
+			mutate: function(root, doc) {
+				var frag = doc.createDocumentFragment();
+				frag.appendChild(doc.createElement("span"));
+				frag.appendChild(doc.createElement("ul"));
+				root.appendChild(frag);
+			},
+			options: function(){
+				return { subtree: true, childList: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].addedNodes.length);
+				equal(records => records[0].addedNodes[0].nodeName);
+				equal(records => records[0].addedNodes[1].nodeName);
+			}
+		})
+		.run(assert);
+	});
 };

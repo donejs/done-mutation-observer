@@ -73,12 +73,12 @@ exports.addMutationObserver = function(window) {
 		enqueue(record);
 	};
 
-	window.document[onChildListSymbol] = function(parentNode, addedNode, removedNode) {
+	window.document[onChildListSymbol] = function(parentNode, addedNodes, removedNode) {
 		var record = new MutationRecord();
 		record.type = "childList";
 		record.target = parentNode;
-		if(addedNode) {
-			record.addedNodes.push(addedNode);
+		if(addedNodes) {
+			record.addedNodes = addedNodes;
 		}
 		if(removedNode) {
 			record.removedNodes.push(removedNode);
