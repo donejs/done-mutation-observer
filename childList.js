@@ -1,9 +1,9 @@
 var childNodes = require("can-child-nodes");
 var onChildListSymbol = Symbol.for("done.onChildList");
 
-module.exports = function(Element) {
-	var appendChild = Element.prototype.appendChild;
-	Element.prototype.appendChild = function(node) {
+module.exports = function(Node) {
+	var appendChild = Node.prototype.appendChild;
+	Node.prototype.appendChild = function(node) {
 		var nodes = collectNodes(node);
 		var res = appendChild.apply(this, arguments);
 		if(this.ownerDocument) {
@@ -12,8 +12,8 @@ module.exports = function(Element) {
 		return res;
 	};
 
-	var insertBefore = Element.prototype.insertBefore;
-	Element.prototype.insertBefore = function(node) {
+	var insertBefore = Node.prototype.insertBefore;
+	Node.prototype.insertBefore = function(node) {
 		var nodes = collectNodes(node);
 		var res = insertBefore.apply(this, arguments);
 		if(this.ownerDocument) {
@@ -22,8 +22,8 @@ module.exports = function(Element) {
 		return res;
 	};
 
-	var removeChild = Element.prototype.removeChild;
-	Element.prototype.removeChild = function(node) {
+	var removeChild = Node.prototype.removeChild;
+	Node.prototype.removeChild = function(node) {
 		var res = removeChild.apply(this, arguments);
 		if(this.ownerDocument) {
 			this.ownerDocument[onChildListSymbol](this, null, node);
@@ -31,8 +31,8 @@ module.exports = function(Element) {
 		return res;
 	};
 
-	var replaceChild = Element.prototype.replaceChild;
-	Element.prototype.replaceChild = function(newNode, oldNode) {
+	var replaceChild = Node.prototype.replaceChild;
+	Node.prototype.replaceChild = function(newNode, oldNode) {
 		var nodes = collectNodes(newNode);
 		var res = replaceChild.apply(this, arguments);
 		if(this.ownerDocument) {
@@ -42,10 +42,10 @@ module.exports = function(Element) {
 	};
 
 	return function() {
-		Element.prototype.appendChild = appendChild;
-		Element.prototype.insertBefore = insertBefore;
-		Element.prototype.removeChild = removeChild;
-		Element.prototype.replaceChild = replaceChild;
+		Node.prototype.appendChild = appendChild;
+		Node.prototype.insertBefore = insertBefore;
+		Node.prototype.removeChild = removeChild;
+		Node.prototype.replaceChild = replaceChild;
 	};
 };
 

@@ -98,7 +98,7 @@ exports.addMutationObserver = function(window) {
 	if(!Node[mutationObserverSymbol]) {
 		Node[mutationObserverSymbol] = [
 			installCharacterData(Node),
-			installChildList(Element),
+			installChildList(Node),
 			installAttributes(Element)
 		];
 	}
