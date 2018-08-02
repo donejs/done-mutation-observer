@@ -78,7 +78,7 @@ exports.addHooks = function(window){
 			this.testMutations = exports.createContext(document, MutationObserver);
 		},
 		afterEach: function(){
-			moUtils.removeMutationObserver(document);
+			moUtils.removeMutationObserver(window);
 		}
 	};
 };
