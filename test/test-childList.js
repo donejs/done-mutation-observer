@@ -143,7 +143,6 @@ module.exports = function(implName, window) {
 				return { subtree: true, childList: true };
 			},
 			test: function(records1, records2, equal) {
-				console.log(records1, records2);
 				equal(records => records.length);
 				equal(records => records[0].addedNodes.length);
 				equal(records => records[0].addedNodes[0].nodeName);

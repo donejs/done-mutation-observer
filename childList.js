@@ -6,8 +6,9 @@ module.exports = function(Node) {
 	Node.prototype.appendChild = function(node) {
 		var nodes = collectNodes(node);
 		var res = appendChild.apply(this, arguments);
-		if(this.ownerDocument) {
-			this.ownerDocument[onChildListSymbol](this, nodes);
+		var doc = getDocument(this);
+		if(doc) {
+			doc[onChildListSymbol](this, nodes);
 		}
 		return res;
 	};
@@ -16,8 +17,9 @@ module.exports = function(Node) {
 	Node.prototype.insertBefore = function(node) {
 		var nodes = collectNodes(node);
 		var res = insertBefore.apply(this, arguments);
-		if(this.ownerDocument) {
-			this.ownerDocument[onChildListSymbol](this, nodes);
+		var doc = getDocument(this);
+		if(doc) {
+			doc[onChildListSymbol](this, nodes);
 		}
 		return res;
 	};
@@ -25,8 +27,9 @@ module.exports = function(Node) {
 	var removeChild = Node.prototype.removeChild;
 	Node.prototype.removeChild = function(node) {
 		var res = removeChild.apply(this, arguments);
-		if(this.ownerDocument) {
-			this.ownerDocument[onChildListSymbol](this, null, node);
+		var doc = getDocument(this);
+		if(doc) {
+			doc[onChildListSymbol](this, null, node);
 		}
 		return res;
 	};
@@ -35,8 +38,9 @@ module.exports = function(Node) {
 	Node.prototype.replaceChild = function(newNode, oldNode) {
 		var nodes = collectNodes(newNode);
 		var res = replaceChild.apply(this, arguments);
-		if(this.ownerDocument) {
-			this.ownerDocument[onChildListSymbol](this, nodes, oldNode);
+		var doc = getDocument(this);
+		if(doc) {
+			doc[onChildListSymbol](this, nodes, oldNode);
 		}
 		return res;
 	};
@@ -56,5 +60,15 @@ function collectNodes(node) {
 			return Array.from(childNodes(node));
 		default:
 			return [node];
+	}
+}
+
+function getDocument(node) {
+	switch(node.nodeType) {
+		// Document node
+		case 9:
+			return node;
+		default:
+			return node.ownerDocument;
 	}
 }
