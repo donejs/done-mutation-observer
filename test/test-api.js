@@ -14,4 +14,16 @@ module.exports = function(implName, window, makeWindow) {
 		doc.body.appendChild(doc.createElement('span'));
 		assert.ok(true, 'Able to create a new document and manipulate it.');
 	});
+
+	QUnit.test('Works even if another document isn\'t being observed', function(assert) {
+		var doc = makeWindow().document;
+
+		try {
+			doc.body.appendChild(doc.createElement('span'));
+			assert.ok(true, "Able to work with docs that are not being observed.");
+		} catch(err) {
+			assert.ok(!err, err);
+		}
+
+	});
 };

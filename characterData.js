@@ -16,7 +16,7 @@ module.exports = function(Node) {
 			var oldValue = this[_priv];
 			this[_priv] = val;
 
-			if(this.ownerDocument/* && this.ownerDocument.contains(this)*/) {
+			if(this.ownerDocument && this.ownerDocument[onCharacterDataSymbol] !== undefined) {
 				this.ownerDocument[onCharacterDataSymbol](this, oldValue);
 			}
 		},
