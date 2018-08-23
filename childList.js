@@ -7,7 +7,7 @@ module.exports = function(Node) {
 		var nodes = collectNodes(node);
 		var res = appendChild.apply(this, arguments);
 		var doc = getDocument(this);
-		if(doc) {
+		if(doc && doc[onChildListSymbol] !== undefined) {
 			doc[onChildListSymbol](this, nodes);
 		}
 		return res;
@@ -18,7 +18,7 @@ module.exports = function(Node) {
 		var nodes = collectNodes(node);
 		var res = insertBefore.apply(this, arguments);
 		var doc = getDocument(this);
-		if(doc) {
+		if(doc && doc[onChildListSymbol] !== undefined) {
 			doc[onChildListSymbol](this, nodes);
 		}
 		return res;
@@ -28,7 +28,7 @@ module.exports = function(Node) {
 	Node.prototype.removeChild = function(node) {
 		var res = removeChild.apply(this, arguments);
 		var doc = getDocument(this);
-		if(doc) {
+		if(doc && doc[onChildListSymbol] !== undefined) {
 			doc[onChildListSymbol](this, null, node);
 		}
 		return res;
@@ -39,7 +39,7 @@ module.exports = function(Node) {
 		var nodes = collectNodes(newNode);
 		var res = replaceChild.apply(this, arguments);
 		var doc = getDocument(this);
-		if(doc) {
+		if(doc && doc[onChildListSymbol] !== undefined) {
 			doc[onChildListSymbol](this, nodes, oldNode);
 		}
 		return res;
