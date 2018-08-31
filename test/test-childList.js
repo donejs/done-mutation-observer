@@ -150,4 +150,40 @@ module.exports = function(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("Does not receive mutations after disconnect()", function(assert){
+		assert.expect(2);
+		var done = assert.async();
+
+		function runTest(window) {
+			return new Promise(resolve => {
+				var observer = new window.MutationObserver(function() {
+					assert.ok(false, "Should not have called this");
+				});
+
+				observer.observe(window.document.body, {
+					childList: true
+				});
+
+				var div = window.document.createElement("div");
+				window.document.body.appendChild(div);
+
+				observer.disconnect();
+
+				setTimeout(function(){
+					assert.ok(true, "an assert after the mutation callback would have been called");
+					resolve();
+				});
+			});
+		}
+
+		Promise.all([
+			// The real window
+			runTest(self),
+
+			// Our fake dom window
+			runTest(window)
+		])
+		.then(done);
+	});
 };

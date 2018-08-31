@@ -23,16 +23,19 @@ exports.addMutationObserver = function(window) {
 		this.callback = callback;
 		this.records = [];
 		this._enqueued = false;
+		this._connected = false;
 	}
 
 	MutationObserver.prototype.observe = function(root, options) {
 		this.root = root;
 		this.options = options;
 		window[mutationObserverSymbol].add(this);
+		this._connected = true;
 	};
 
 	MutationObserver.prototype.disconnect = function(){
 		window[mutationObserverSymbol].delete(this);
+		this._connected = false;
 	};
 
 	MutationObserver.prototype._enqueue = function(record) {
@@ -40,6 +43,10 @@ exports.addMutationObserver = function(window) {
 		if(!this._enqueued) {
 			this._enqueued = true;
 			asap(function(){
+				if(!this._connected) {
+					return;
+				}
+				
 				this._enqueued = false;
 				var records = this.records;
 				this.records = [];
