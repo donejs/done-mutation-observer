@@ -52,4 +52,29 @@ module.exports = function(implName, window) {
 		})
 		.run(assert);
 	});
+
+	QUnit.test("node.data is in sync with node.nodeValue", function(assert) {
+		this.testMutations({
+			build: function(doc) {
+				var div = doc.createElement("div");
+				var article = doc.createElement("article");
+				article.textContent = "one";
+				article.firstChild.data = "one";
+				div.appendChild(article);
+				return div;
+			},
+			mutate: function(root){
+				root.firstChild.firstChild.nodeValue = "two";
+			},
+			options: function(){
+				return { subtree: true, characterData: true };
+			},
+			test: function(records1, records2, equal) {
+				equal(records => records.length);
+				equal(records => records[0].target.nodeValue);
+				equal(records => records[0].target.data);
+			}
+		})
+		.run(assert);
+	});
 };

@@ -1,13 +1,7 @@
-var noop = Function.prototype;
-
 var onCharacterDataSymbol = Symbol.for("done.onCharacterData");
 
 module.exports = function(Node) {
 	var origDesc = Object.getOwnPropertyDescriptor(Node.prototype, "nodeValue");
-	var desc = origDesc;
-	if(desc == null) {
-		desc = { get: noop, set: noop };
-	}
 
 	var _priv = Symbol("nodeValue");
 	Object.defineProperty(Node.prototype, "nodeValue", {
@@ -15,6 +9,10 @@ module.exports = function(Node) {
 		set: function(val){
 			var oldValue = this[_priv];
 			this[_priv] = val;
+
+			if('data' in this) {
+				this.data = val;
+			}
 
 			if(this.ownerDocument && this.ownerDocument[onCharacterDataSymbol] !== undefined) {
 				this.ownerDocument[onCharacterDataSymbol](this, oldValue);
