@@ -32,14 +32,14 @@
   ],
   "devDependencies": {
     "can-vdom": "^4.3.0",
-    "jsdom": "^11.11.0",
+    "jsdom": "^15.1.1",
     "jshint": "^2.9.1",
     "steal": "^2.1.1",
-    "steal-qunit": "^1.0.1",
+    "steal-qunit": "^2.0.0",
     "steal-tools": "^2.0.0",
-    "testee": "^0.7.0",
+    "testee": "^0.9.1",
     "minimalistic-crypto-utils": "1.0.1",
-    "nwsapi": "2.0.7"
+    "nwsapi": "2.1.4"
   },
   "steal": {
     "meta": {
